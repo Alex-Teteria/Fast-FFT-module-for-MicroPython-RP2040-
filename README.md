@@ -146,4 +146,9 @@ print("FFT time:", dt, "us")
 
 ---  
 
+## 📄 Credits and License
+- **fastfft module**: Licensed under MIT.
+- **kissFFT**: This project uses the [kissFFT](https://github.com/mborgerding/kissfft) library by Mark Borgerding, licensed under the **BSD 3-Clause License**.
+---  
+
 
