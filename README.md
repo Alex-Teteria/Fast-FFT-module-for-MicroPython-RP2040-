@@ -212,6 +212,105 @@ print(dbfs_for_band)
 - Перевірка типів і розміру вхідного масиву
 
 ---  
+---
+
+## 🔧 Building MicroPython with `fastfft` module
+
+---
+
+Цей розділ описує, як **вмонтувати модуль `fastfft` у стандартну прошивку MicroPython**
+та зібрати готовий файл прошивки `.uf2` для RP2040 (Raspberry Pi Pico).
+
+Модуль підключається як **C user module** через механізм `usermods`.
+
+---
+
+### 📋 Передумови
+
+Очікується, що у вас вже є:
+
+- клон репозиторію **MicroPython**
+- налаштований **Pico SDK**
+- інструменти збірки (`cmake`, `make`)
+- компілятор `arm-none-eabi-gcc` доступний у `PATH`
+
+Перевірка компілятора:
+
+```bash
+arm-none-eabi-gcc --version
+```
+### 📁 Розміщення модуля та необхідні файли
+
+Скопіюйте каталог модуля fastfft разом з усіма необхідними файлами у директорію usermods.  
+Файли kiss_fft_guts.h, kiss_fft.c, kiss_fft.h, kiss_fft_log.h, kiss_fftr.c, kiss_fftr.h необхідно взяти із репозитарія [kissFFT](https://github.com/mborgerding/kissfft)  
+
+Коректна структура: 
+```bash
+micropython/usermods
+├── fastfft
+│   ├── mod_fastfft.c
+│   ├── _kiss_fft_guts.h
+│   ├── kiss_fft.c
+│   ├── kiss_fft.h
+│   ├── kiss_fft_log.h
+│   ├── kiss_fftr.c
+│   ├── kiss_fftr.h
+│   └── micropython.cmake
+└── micropython.cmake
+```
+### 🧩 Підключення модуля
+
+Файл:  
+```bash
+micropython/usermods/micropython.cmake
+```
+повинен містити:  
+```bash
+include(${CMAKE_CURRENT_LIST_DIR}/fastfft/micropython.cmake) 
+```
+Це підключає модуль fastfft до системи збірки MicroPython.  
+### 🧱 Опис модуля  
+Файл:  
+```cmake
+micropython/usermods/fastfft/micropython.cmake
+```
+повинен містити:
+```cmake
+set(FASTFFT_MOD_DIR ${CMAKE_CURRENT_LIST_DIR})
+
+list(APPEND MICROPY_SOURCE_EXTMOD
+    ${FASTFFT_MOD_DIR}/mod_fastfft.c
+    ${FASTFFT_MOD_DIR}/kiss_fft.c
+    ${FASTFFT_MOD_DIR}/kiss_fftr.c
+)
+
+list(APPEND MICROPY_INC_EXTMOD
+    ${FASTFFT_MOD_DIR}
+) 
+```
+### 🏗️ Збірка прошивки  
+```bash
+cd ~/micropython/ports/rp2
+rm -rf build
+mkdir build
+cd build
+
+cmake .. \
+  -DPICO_BOARD=pico \
+  -DUSER_C_MODULES=/home/alex/micropython/usermods
+
+make -j4 | tee build.log
+```
+Після успішної збірки буде створено файл:  
+```bash
+firmware.uf2
+```
+### ✅ Перевірка після прошивки  
+```python
+import fastfft
+dir(fastfft)
+```
+---
 
 ## 📄 Credits and License
 - **fastfft module**: Licensed under MIT.
