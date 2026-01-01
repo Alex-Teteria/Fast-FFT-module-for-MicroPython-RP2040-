@@ -242,7 +242,7 @@ arm-none-eabi-gcc --version
 ### 📁 Розміщення модуля та необхідні файли
 
 Скопіюйте каталог модуля fastfft разом з усіма необхідними файлами у директорію usermods.  
-Файли kiss_fft_guts.h, kiss_fft.c, kiss_fft.h, kiss_fft_log.h, kiss_fftr.c, kiss_fftr.h необхідно взяти із репозитарія [kissFFT](https://github.com/mborgerding/kissfft)  
+Файли _kiss_fft_guts.h, kiss_fft.c, kiss_fft.h, kiss_fft_log.h, kiss_fftr.c, kiss_fftr.h необхідно взяти із репозитарія [kissFFT](https://github.com/mborgerding/kissfft)  
 
 Коректна структура: 
 ```bash
