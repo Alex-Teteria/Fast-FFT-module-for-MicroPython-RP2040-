@@ -135,6 +135,73 @@ t1 = time.ticks_us()
 dt = time.ticks_diff(t1, t0)
 print("FFT time:", dt, "us")
 ```
+---  
+
+## ⚗️ Деякі перевірки та приклади використання
+#### ✅ Перевірка на збереження енергії сигналу після перетворення (теорема Ляпунова-Парсеваля)
+```python
+from array import array
+import fastfft
+import random
+
+
+FFT_SIZE = 512
+amp = 10_000        # пік сигналу (без clipping)
+
+buf = array('h', [0]*FFT_SIZE)
+
+# тестовий сигнал білий шум
+for i in range(FFT_SIZE):
+    buf[i] = random.randint(-amp, amp)
+
+# енергія у часі
+Et = sum(x*x for x in buf)
+
+spec = fastfft.rfft(buf)
+
+# енергія у частоті
+Ef = 2 * sum(spec[1:]) * FFT_SIZE
+
+print(f'Повинні бути ~однакові: {Et} ~= {Ef}') # повинні бути ~однакові
+```
+#### :seedling: обчислення рівня сигналу в dBFS (дБ повної шкали) для смуги частот  
+```python
+from array import array
+import math
+import fastfft
+import random
+
+
+FFT_SIZE = 512
+amp = 10_000        # пік сигналу (без clipping)
+
+buf = array('h', [0]*FFT_SIZE)
+
+# тестовий сигнал білий шум
+for i in range(FFT_SIZE):
+    buf[i] = random.randint(-amp, amp)
+
+spec = fastfft.rfft(buf)
+
+# Опорна потужність повномасштабного синуса (Standard AES17 Reference)
+FS_RMS2 = (32767 / math.sqrt(2))**2
+
+# значення dBFS для смуги частот
+def band_dbfs(spec, i, j):
+    
+    e = 0
+    for k in range(i, j):
+        e += spec[k]
+    
+    if e <= 0:
+        return -120
+    
+    return 10 * math.log10((2 * e) / FS_RMS2)
+
+pin_1, pin_2 = 4, 50 # значення діапазону пінів для розрахунку
+dbfs_for_band = band_dbfs(spec, pin_1, pin_2)
+print(dbfs_for_band)
+```
 
 ---  
 
