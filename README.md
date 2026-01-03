@@ -389,4 +389,13 @@ dir(fastfft)
 - **kissFFT**: This project uses the [kissFFT](https://github.com/mborgerding/kissfft) library by Mark Borgerding, licensed under the **BSD 3-Clause License**.
 ---  
 
+---
 
+## 📄 Credits and License
+
+- fastfft module — MIT License (SPDX: MIT). See [LICENSE](./LICENSE) for details.
+- kissFFT — used as the FFT backend. kissFFT is authored by Mark Borgerding and licensed under the BSD 3‑Clause License (SPDX: BSD-3-Clause). See [licenses/kissfft-BSD-3-Clause.txt](./licenses/kissfft-BSD-3-Clause.txt) for the full text and attribution.
+- Source & attribution:
+  - kissFFT repository: https://github.com/mborgerding/kissfft
+
+---
