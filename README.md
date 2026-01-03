@@ -102,14 +102,10 @@ import math
 import fastfft
 
 N = 512
-fs = 8000          # частота дискретизації
 k = 32             # номер FFT-біна
 amp = 10_000
 
-buf = array('h', [0]*FFT_SIZE)
-
-for n in range(FFT_SIZE):
-    buf[n] = int(amp * math.sin(2*math.pi*f*n/fs))
+buf = array('h', [0] * N)
 
 for n in range(N):
     buf[n] = int(amp * math.sin(2.0 * math.pi * k * n / N))
