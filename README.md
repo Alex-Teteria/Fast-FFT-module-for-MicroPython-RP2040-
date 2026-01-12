@@ -12,7 +12,16 @@ RP2040 (Raspberry Pi Pico та сумісні). Модуль орієнтова�
 
 ## 📦 Основні характеристики
 
-- Фіксований FFT розмір: **N = 512**
+#### Фіксований FFT розмір: **N = 512** або **N = 1024**  
+Мінімальний патч для файлу `mod_fastfft.c`, щоб перейти від **N = 512** до **N = 1024**:
+```diff
+- #define FFT_SIZE 512
++ #define FFT_SIZE 1024
+
+- static uint8_t fft_cfg_mem[8192] __attribute__((aligned(8)));
++ static uint8_t fft_cfg_mem[16384] __attribute__((aligned(8)));
+```
+###  Далі описання подано для варіанту **N = 512**  
 - Функція: `fastfft.rfft(buf[, window])` — повертає `memoryview('i')` з
   енергіями бінів як `int32`
 - Вхід: buffer‑protocol обʼєкт, що містить **512** `int16` (наприклад `array('h')`, `bytearray`, `bytes`, `memoryview`)
@@ -369,7 +378,7 @@ cd build
 
 cmake .. \
   -DPICO_BOARD=pico \
-  -DUSER_C_MODULES=/home/alex/micropython/usermods
+  -DUSER_C_MODULES=$HOME/micropython/usermods
 
 make -j4 | tee build.log
 ```
